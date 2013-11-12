@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane minHeight="201.0" prefHeight="201.0" prefWidth="200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="org.gismarzf.jevernote.LoginController">
+  <!-- TODO Add Nodes -->
+  <children>
+    <VBox alignment="CENTER" prefHeight="201.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+        <ImageView id="" fx:id="jEvernoteLogo" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="the-image">
+          <image>
+            <Image url="@../../../../images/evernote_logo_center_4c-lrg.png" />
+          </image>
+        </ImageView>
+        <GridPane gridLinesVisible="false">
+          <children>
+            <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <TextField fx:id="loginUserName" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <PasswordField fx:id="loginPassword" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+          </children>
+          <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="98.0" minWidth="10.0" prefWidth="60.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="157.0" minWidth="10.0" prefWidth="130.0" />
+          </columnConstraints>
+          <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          </rowConstraints>
+          <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+          </VBox.margin>
+        </GridPane>
+        <Button fx:id="loginButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#testButton" prefHeight="35.0" prefWidth="250.0" text="Login" VBox.margin="$x1" />
+      </children>
+    </VBox>
+  </children>
+</AnchorPane>
