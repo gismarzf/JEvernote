@@ -51,7 +51,8 @@ public class LoginController {
 
 	@FXML
 	private void testButton() {
-		loginUserName.setText("Hello, world.");
+		loginUserName.setText(loginPassword.getText());
+
 	}
 
 }

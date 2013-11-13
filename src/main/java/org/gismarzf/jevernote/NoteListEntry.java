@@ -9,7 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class NoteListEntry extends Application {
 
 	private Stage loginStage;
 	private AnchorPane loginLayout;
@@ -24,7 +24,7 @@ public class Main extends Application {
 			// Load the root layout from the fxml file
 			FXMLLoader loader =
 					new FXMLLoader(
-							Main.class
+							NoteListEntry.class
 									.getResource("view/Login.fxml"));
 			loginLayout = (AnchorPane) loader.load();
 
@@ -37,7 +37,7 @@ public class Main extends Application {
 
 			FXMLLoader loader2 =
 					new FXMLLoader(
-							Main.class
+							NoteListEntry.class
 									.getResource("view/NoteListOverview.fxml"));
 
 			BorderPane noteListLayout = (BorderPane) loader2.load();

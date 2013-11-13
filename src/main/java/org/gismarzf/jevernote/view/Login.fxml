@@ -14,7 +14,7 @@
       <children>
         <ImageView id="" fx:id="jEvernoteLogo" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="the-image">
           <image>
-            <Image url="@../../../../images/evernote_logo_center_4c-lrg.png" />
+            <Image url="@images/evernote_logo_center_4c-lrg.png" />
           </image>
         </ImageView>
         <GridPane gridLinesVisible="false">
