@@ -5,44 +5,32 @@ import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class LoginEntry extends Application {
 
-	private Stage loginStage;
-	private AnchorPane loginLayout;
+	private Stage stage;
+	private BorderPane rootPane;
 
 	@Override
 	public void start(Stage loginStage) {
-		this.loginStage = loginStage;
-		this.loginStage.setTitle("Login");
+		this.stage = loginStage;
+		this.stage.setTitle("NoteList Overview");
 
 		try {
 
-			// Load the root layout from the fxml file
 			FXMLLoader loader =
 					new FXMLLoader(
-							Main.class
-									.getResource("view/Login.fxml"));
-			loginLayout = (AnchorPane) loader.load();
+							LoginEntry.class
+									.getResource("view/NoteListOverview.fxml"));
 
-			Scene scene = new Scene(loginLayout);
+			rootPane = (BorderPane) loader.load();
+			Scene scene = new Scene(rootPane);
 
 			loginStage.setScene(scene);
 			loginStage.setResizable(false);
-
 			loginStage.show();
-
-			FXMLLoader loader2 =
-					new FXMLLoader(
-							Main.class
-									.getResource("view/NoteListOverview.fxml"));
-
-			BorderPane noteListLayout = (BorderPane) loader2.load();
-			Scene scene2 = new Scene(noteListLayout);
-			loginStage.setScene(scene2);
 
 		} catch (IOException e) {
 			// Exception gets thrown if the fxml file could not be loaded
@@ -57,7 +45,7 @@ public class Main extends Application {
 	 * @return
 	 */
 	public Stage getPrimaryStage() {
-		return loginStage;
+		return stage;
 	}
 
 	public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package org.gismarzf.jevernote;
+package org.gismarzf.jevernote.demo;
 
 /*
 
@@ -70,8 +70,7 @@ public class EDAMDemo {
 			token = AUTH_TOKEN;
 		}
 		if ("your developer token".equals(token)) {
-			System.err
-					.println("Please fill in your developer token");
+			System.err.println("Please fill in your developer token");
 			System.err
 					.println("To get a developer token, go to https://sandbox.evernote.com/api/DeveloperToken.action");
 			return;
@@ -100,15 +99,13 @@ public class EDAMDemo {
 			} else {
 				System.err.println("Error: "
 						+ e.getErrorCode().toString()
-						+ " parameter: "
-						+ e.getParameter());
+						+ " parameter: " + e.getParameter());
 			}
 		} catch (EDAMSystemException e) {
 			System.err.println("System error: "
 					+ e.getErrorCode().toString());
 		} catch (TTransportException t) {
-			System.err.println("Networking error: "
-					+ t.getMessage());
+			System.err.println("Networking error: " + t.getMessage());
 		}
 	}
 
@@ -203,8 +200,7 @@ public class EDAMDemo {
 		// tag in the note's ENML content. The en-media tag identifies the
 		// corresponding
 		// Resource using the MD5 hash.
-		String hashHex =
-				bytesToHex(resource.getData().getBodyHash());
+		String hashHex = bytesToHex(resource.getData().getBodyHash());
 
 		// The content of an Evernote note is represented using Evernote Markup
 		// Language
@@ -217,9 +213,7 @@ public class EDAMDemo {
 						+ "<en-note>"
 						+ "<span style=\"color:green;\">Here's the Evernote logo:</span><br/>"
 						+ "<en-media type=\"image/png\" hash=\""
-						+ hashHex
-						+ "\"/>"
-						+ "</en-note>";
+						+ hashHex + "\"/>" + "</en-note>";
 		note.setContent(content);
 
 		// Finally, send the new note to Evernote using the createNote method
@@ -263,8 +257,7 @@ public class EDAMDemo {
 		System.out.println("Searching for notes matching query: "
 				+ query);
 		NoteList notes = noteStore.findNotes(filter, 0, 50);
-		System.out.println("Found "
-				+ notes.getTotalNotes()
+		System.out.println("Found " + notes.getTotalNotes()
 				+ " matching notes");
 
 		Iterator<Note> iter = notes.getNotesIterator();
@@ -280,15 +273,10 @@ public class EDAMDemo {
 			// To get the note content and/or binary resources, call getNote()
 			// using the note's GUID.
 			Note fullNote =
-					noteStore.getNote(
-							note.getGuid(),
-							true,
-							true,
-							false,
-							false);
+					noteStore.getNote(note.getGuid(), true, true,
+							false, false);
 			System.out.println("Note contains "
-					+ fullNote.getResourcesSize()
-					+ " resources");
+					+ fullNote.getResourcesSize() + " resources");
 			System.out.println();
 		}
 	}
@@ -315,11 +303,7 @@ public class EDAMDemo {
 		// do something with the note, then update a note attribute such as a
 		// tag.
 		Note note =
-				noteStore.getNote(
-						newNoteGuid,
-						true,
-						true,
-						false,
+				noteStore.getNote(newNoteGuid, true, true, false,
 						false);
 
 		// Do something with the note contents or resources...
@@ -335,21 +319,15 @@ public class EDAMDemo {
 		// Now update the note. Because we haven't set the content or resources,
 		// they won't be changed.
 		noteStore.updateNote(note);
-		System.out
-				.println("Successfully added tag to existing note");
+		System.out.println("Successfully added tag to existing note");
 
 		// To prove that we didn't destroy the note, let's fetch it again and
 		// verify that it still has 1 resource.
 		note =
-				noteStore.getNote(
-						newNoteGuid,
-						false,
-						false,
-						false,
+				noteStore.getNote(newNoteGuid, false, false, false,
 						false);
 		System.out.println("After update, note has "
-				+ note.getResourcesSize()
-				+ " resource(s)");
+				+ note.getResourcesSize() + " resource(s)");
 		System.out.println("After update, note tags are: ");
 		for (String tagGuid : note.getTagGuids()) {
 			Tag tag = noteStore.getTag(tagGuid);
@@ -383,8 +361,8 @@ public class EDAMDemo {
 		// Create a new Data object to contain the file contents
 		Data data = new Data();
 		data.setSize(body.length);
-		data.setBodyHash(MessageDigest.getInstance("MD5").digest(
-				body));
+		data.setBodyHash(MessageDigest.getInstance("MD5")
+				.digest(body));
 		data.setBody(body);
 
 		return data;

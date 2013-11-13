@@ -1,21 +1,12 @@
 package org.gismarzf.jevernote;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.TableView;
 
-public class LoginController {
+public class NoteListController {
 
 	@FXML
-	private ImageView jEvernoteLogo;
-	@FXML
-	private TextField loginUserName;
-	@FXML
-	private PasswordField loginPassword;
-	@FXML
-	private Button loginButton;
+	private TableView<String> jEvernoteLogo;
 
 	// Reference to the main application
 	private LoginEntry mainApp;
@@ -24,7 +15,7 @@ public class LoginController {
 	 * The constructor. The constructor is called before the initialize()
 	 * method.
 	 */
-	public LoginController() {
+	public NoteListController() {
 	}
 
 	/**
@@ -47,12 +38,6 @@ public class LoginController {
 
 	public LoginEntry getMainApp() {
 		return mainApp;
-	}
-
-	@FXML
-	private void testButton() {
-		loginUserName.setText(loginPassword.getText());
-
 	}
 
 }
