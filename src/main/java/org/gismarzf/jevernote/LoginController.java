@@ -17,42 +17,22 @@ public class LoginController {
 	@FXML
 	private Button loginButton;
 
-	// Reference to the main application
-	private LoginEntry mainApp;
+	private MainStage mainApp;
 
-	/**
-	 * The constructor. The constructor is called before the initialize()
-	 * method.
-	 */
-	public LoginController() {
-	}
-
-	/**
-	 * Initializes the controller class. This method is automatically called
-	 * after the fxml file has been loaded.
-	 */
-	@FXML
-	private void initialize() {
-
-	}
-
-	/**
-	 * Is called by the main application to give a reference back to itself.
-	 * 
-	 * @param mainApp
-	 */
-	public void setMainApp(LoginEntry mainApp) {
+	public void setMainApp(MainStage mainApp) {
 		this.mainApp = mainApp;
 	}
 
-	public LoginEntry getMainApp() {
+	public MainStage getMainApp() {
 		return mainApp;
 	}
 
 	@FXML
 	private void testButton() {
-		loginUserName.setText(loginPassword.getText());
-
+		mainApp.getStage().hide();
+		mainApp
+			.setNoteListStage(new NoteListStage(mainApp));
+		mainApp.getNoteListStage().loadStage();
 	}
 
 }
