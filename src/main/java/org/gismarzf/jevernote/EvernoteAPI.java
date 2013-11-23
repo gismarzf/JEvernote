@@ -16,8 +16,6 @@ import com.google.common.collect.Lists;
 
 public class EvernoteAPI {
 
-	// TODO encapsulate enml4j HERE. give access to notelistcontroller (hook)
-	private String newNoteGuid;
 	private NoteStoreClient noteStore;
 	private UserStoreClient userStore;
 	private List<Note> notes;
@@ -44,7 +42,7 @@ public class EvernoteAPI {
 	public void downloadNotes(String searchString, int maxNotes)
 		throws Exception {
 
-		// TODO only first notebook
+		// TODO only searching in first notebook
 		Notebook notebook = noteStore.listNotebooks().get(0);
 
 		NoteFilter filter = new NoteFilter();
@@ -80,9 +78,11 @@ public class EvernoteAPI {
 		userStore = factory.createUserStoreClient();
 
 		boolean versionOk =
-			userStore.checkVersion("Evernote EDAMDemo (Java)",
-				com.evernote.edam.userstore.Constants.EDAM_VERSION_MAJOR,
-				com.evernote.edam.userstore.Constants.EDAM_VERSION_MINOR);
+			userStore
+				.checkVersion(
+					"Evernote EDAMDemo (Java)",
+					com.evernote.edam.userstore.Constants.EDAM_VERSION_MAJOR,
+					com.evernote.edam.userstore.Constants.EDAM_VERSION_MINOR);
 
 		if (!versionOk) {
 			System.err

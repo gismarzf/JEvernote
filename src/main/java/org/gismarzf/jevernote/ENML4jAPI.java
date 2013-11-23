@@ -44,7 +44,6 @@ import com.evernote.edam.error.EDAMSystemException;
 import com.evernote.edam.error.EDAMUserException;
 import com.evernote.edam.type.Note;
 import com.evernote.edam.type.Resource;
-import com.evernote.edam.userstore.Constants;
 import com.evernote.thrift.TException;
 import com.google.common.collect.Maps;
 import com.syncthemall.enml4j.ENMLProcessor;
@@ -72,28 +71,18 @@ public class ENML4jAPI {
 				false);
 	}
 
-	private Map<String, URL> pathToNotesIndexHTML = Maps.newHashMap();
-	private static final String authToken =
-		"S=s1:U=8b9d6:E=149a4d264f3:C=1424d2138f4:P=1cd:A=en-devtoken:"
-			+ "V=2:H=b91f9552fe434cef234885ebe369586b";
+	private Map<String, URL> pathToNotesIndexHTML = Maps
+		.newHashMap();
 
 	// Used in this demo as a convenient way to map file extension to mime type
-	private static TikaConfig config = TikaConfig.getDefaultConfig();
+	private static TikaConfig config = TikaConfig
+		.getDefaultConfig();
 
 	private static final String downloadFolder = "./evernotes";
 
 	private static ENMLProcessor ENMLProcessor;
 
-	private static final String evernoteHost = "sandbox.evernote.com";
-
 	private NoteStoreClient noteStore;
-
-	private static final String userAgent = "Evernote/ENML4j (Java) "
-		+ Constants.EDAM_VERSION_MAJOR + "."
-		+ Constants.EDAM_VERSION_MINOR;
-
-	private static final String userStoreUrl = "https://"
-		+ evernoteHost + "/edam/user";
 
 	public void saveNotesToDisk(List<Note> noteList) {
 
@@ -112,7 +101,8 @@ public class ENML4jAPI {
 
 				// Get the Note with it's content and resources data
 				note =
-					noteStore.getNote(note.getGuid(), true, true, false, false);
+					noteStore.getNote(note.getGuid(), true, true, false,
+						false);
 
 				// Save the Note attachments (the binary files) in the
 				// download folder
@@ -132,7 +122,8 @@ public class ENML4jAPI {
 								+ config.getMimeRepository()
 									.forName(resource.getMime()).getExtension();
 
-						mapHashtoURL.put(resource.getGuid(), attachementPath);
+						mapHashtoURL
+							.put(resource.getGuid(), attachementPath);
 					}
 				}
 
@@ -166,7 +157,8 @@ public class ENML4jAPI {
 	 */
 	private static void saveAttachement(Note note)
 		throws EDAMUserException, EDAMSystemException,
-		EDAMNotFoundException, TException, IOException, MimeTypeException {
+		EDAMNotFoundException, TException, IOException,
+		MimeTypeException {
 
 		// make folder for this note
 		File noteDirectory =
@@ -181,8 +173,8 @@ public class ENML4jAPI {
 					noteDirectory
 						+ "/"
 						+ resource.getGuid()
-						+ config.getMimeRepository().forName(resource.getMime())
-							.getExtension();
+						+ config.getMimeRepository()
+							.forName(resource.getMime()).getExtension();
 
 				BufferedOutputStream bos =
 					new BufferedOutputStream(new FileOutputStream(

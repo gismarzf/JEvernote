@@ -16,13 +16,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.web.WebView;
-import javafx.stage.Stage;
 
 import com.evernote.edam.type.Note;
 
 public class NoteListController implements Hookable {
 
-	private Stage mainStage;
 	private final EvernoteAPI evernote = new EvernoteAPI();
 	private ObservableList<Note> noteList;
 
@@ -48,10 +46,6 @@ public class NoteListController implements Hookable {
 
 	@Override
 	public void setHook(Object o) {
-
-		if (o instanceof Stage) {
-			mainStage = (Stage) o;
-		}
 
 	}
 
@@ -81,14 +75,15 @@ public class NoteListController implements Hookable {
 
 				@Override
 				public void changed(
-					ObservableValue<? extends Note> observable, Note oldValue,
-					Note newValue) {
+					ObservableValue<? extends Note> observable,
+					Note oldValue, Note newValue) {
 
 					// this calls with newValue=null when i make a new search
 					// maybe b/c the selection points to a new non-existing row??
 					if (newValue != null) {
 						noteContentView.getEngine().load(
-							evernote.getNoteHTMLContentPath(newValue).toString());
+							evernote.getNoteHTMLContentPath(newValue)
+								.toString());
 					}
 				}
 			});
