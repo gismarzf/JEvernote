@@ -5,34 +5,39 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
-public class LoginController {
+public class LoginController implements Hookable {
 
 	@FXML
 	private ImageView jEvernoteLogo;
 	@FXML
-	private TextField loginUserName;
+	private Button loginButton;
 	@FXML
 	private PasswordField loginPassword;
 	@FXML
-	private Button loginButton;
+	private TextField loginUserName;
 
-	private MainStage mainApp;
+	private Stage mainStage;
 
-	public void setMainApp(MainStage mainApp) {
-		this.mainApp = mainApp;
-	}
+	@Override
+	public void setHook(Object o) {
 
-	public MainStage getMainApp() {
-		return mainApp;
+		if (o instanceof Stage) {
+			mainStage = (Stage) o;
+		}
+
 	}
 
 	@FXML
 	private void testButton() {
-		mainApp.getStage().hide();
-		mainApp
-			.setNoteListStage(new NoteListStage(mainApp));
-		mainApp.getNoteListStage().loadStage();
-	}
 
+		mainStage.hide();
+
+		StageWrapper noteListOverviewStage =
+			new StageWrapper(
+				"view/NoteListOverview.fxml", "notes overview");
+		mainStage = noteListOverviewStage.getStage();
+		mainStage.show();
+	}
 }

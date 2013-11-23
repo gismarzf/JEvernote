@@ -3,6 +3,8 @@ package org.gismarzf.jevernote;
 import java.util.List;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,63 +13,98 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
-import org.gismarzf.jevernote.model.Note;
+import com.evernote.edam.type.Note;
 
-public class NoteListController {
+public class NoteListController implements Hookable {
 
+	private Stage mainStage;
+	private final EvernoteAPI evernote = new EvernoteAPI();
 	private ObservableList<Note> noteList;
 
 	@FXML
+	private WebView noteContentView;
+	@FXML
 	private TableView<Note> noteListView;
 	@FXML
-	private TableColumn<Note, String> titleColumn;
-	@FXML
-	private TableColumn<Note, String> tagsColumn;
-	@FXML
-	private TableColumn<Note, String> updatedColumn;
-	@FXML
-	private TableColumn<Note, String> createdColumn;
-	@FXML
 	private ProgressIndicator progressIndicator;
+	@FXML
+	private TextField searchTextField;
 	@FXML
 	private Button setFilterButton;
 	@FXML
 	private Label statusMsg;
+	@FXML
+	private TableColumn<Note, String> titleColumn;
 
-	private MainStage mainApp;
+	@FXML
+	public void exitApplication() {
+		Platform.exit();
+	}
+
+	@Override
+	public void setHook(Object o) {
+
+		if (o instanceof Stage) {
+			mainStage = (Stage) o;
+		}
+
+	}
+
+	public void setNoteList(List<Note> notes) {
+		noteList = FXCollections.observableArrayList(notes);
+		noteListView.setItems(noteList);
+		// make the tableview respond to changes in the note object
+		titleColumn
+			.setCellValueFactory(new PropertyValueFactory<Note, String>(
+				"title"));
+	}
 
 	@FXML
 	private void initialize() {
 
+		// make the tableview respond to changes in the note object
 		titleColumn
 			.setCellValueFactory(new PropertyValueFactory<Note, String>(
 				"title"));
-		tagsColumn
-			.setCellValueFactory(new PropertyValueFactory<Note, String>(
-				"tags"));
-		updatedColumn
-			.setCellValueFactory(new PropertyValueFactory<Note, String>(
-				"updated"));
-		createdColumn
-			.setCellValueFactory(new PropertyValueFactory<Note, String>(
-				"created"));
 
-		loadNotes();
+		progressIndicator.setVisible(false);
+		statusMsg.setText("Done.");
+
+		// Listen for selection changes, show note title in text area
+		noteListView.getSelectionModel().selectedItemProperty()
+			.addListener(new ChangeListener<Note>() {
+
+				@Override
+				public void changed(
+					ObservableValue<? extends Note> observable, Note oldValue,
+					Note newValue) {
+
+					// this calls with newValue=null when i make a new search
+					// maybe b/c the selection points to a new non-existing row??
+					if (newValue != null) {
+						noteContentView.getEngine().load(
+							evernote.getNoteHTMLContentPath(newValue).toString());
+					}
+				}
+			});
 
 	}
 
+	@FXML
 	private void loadNotes() {
 
 		progressIndicator.setVisible(true);
 		progressIndicator.setProgress(-1);
 		statusMsg.setText("Loading notes...");
 
-		// login, etc.
-		final Evernote en = new Evernote();
 		try {
-			en.setUp();
+			// login, etc.
+			evernote.setUp();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -79,7 +116,12 @@ public class NoteListController {
 			@Override
 			public void run() {
 				try {
-					setNoteList(en.listNotes());
+
+					evernote.downloadNotes(searchTextField.getText(), 10);
+					evernote.saveNotesToDisk();
+
+					setNoteList(evernote.getNotes());
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -95,21 +137,10 @@ public class NoteListController {
 
 			}
 		});
+
+		// start thread
 		tr.start();
 
-	}
-
-	public void setNoteList(List<Note> notes) {
-		noteList = FXCollections.observableArrayList(notes);
-		noteListView.setItems(noteList);
-	}
-
-	public void setMainApp(MainStage mainApp) {
-		this.mainApp = mainApp;
-	}
-
-	public MainStage getMainApp() {
-		return mainApp;
 	}
 
 }
