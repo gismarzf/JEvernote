@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
@@ -38,6 +39,8 @@ public class NoteListController implements Hookable {
 	private Label statusMsg;
 	@FXML
 	private TableColumn<Note, String> titleColumn;
+	@FXML
+	private CheckMenuItem showLeftPanelCheck;
 
 	@FXML
 	public void exitApplication() {
@@ -136,6 +139,17 @@ public class NoteListController implements Hookable {
 		// start thread
 		tr.start();
 
+	}
+
+	@FXML
+	public void showLeftPanelClick() {
+		if (showLeftPanelCheck.isSelected()) {
+			noteListView.setVisible(true);
+			noteListView.setManaged(true);
+		} else {
+			noteListView.setVisible(false);
+			noteListView.setManaged(false);
+		}
 	}
 
 }

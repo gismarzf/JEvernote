@@ -35,8 +35,7 @@ public class LoginController implements Hookable {
 		mainStage.hide();
 
 		StageWrapper noteListOverviewStage =
-			new StageWrapper(
-				"view/NoteListOverview.fxml", "notes overview");
+			new StageWrapper("view/NoteListOverview.fxml", "JEvernote");
 		mainStage = noteListOverviewStage.getStage();
 		mainStage.show();
 	}

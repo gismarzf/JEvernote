@@ -11,6 +11,15 @@
   <bottom>
     <HBox alignment="CENTER_RIGHT" fillHeight="true" maxHeight="15.0" prefHeight="30.0" prefWidth="1021.0" BorderPane.alignment="CENTER">
       <children>
+        <HBox prefHeight="25.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+          <children>
+            <TextField fx:id="searchTextField" maxWidth="450.0" onAction="#loadNotes" prefWidth="200.0" promptText="Search notes..." HBox.hgrow="ALWAYS">
+              <HBox.margin>
+                <Insets />
+              </HBox.margin>
+            </TextField>
+          </children>
+        </HBox>
         <Label fx:id="statusMsg" maxHeight="15.0" text="Status message....">
           <HBox.margin>
             <Insets right="10.0" />
@@ -21,25 +30,16 @@
     </HBox>
   </bottom>
   <center>
-    <SplitPane dividerPositions="0.4432485322896282" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0">
-      <items>
-        <VBox alignment="TOP_LEFT" maxWidth="450.0" minWidth="-Infinity" prefHeight="692.0" prefWidth="450.0">
-          <children>
-            <TableView fx:id="noteListView" maxHeight="1.7976931348623157E308" maxWidth="450.0" prefHeight="500.0" prefWidth="450.0" tableMenuButtonVisible="false" VBox.vgrow="ALWAYS">
-              <columns>
-                <TableColumn editable="false" maxWidth="450.0" minWidth="0.0" prefWidth="448.0" text="title" fx:id="titleColumn" />
-              </columns>
-            </TableView>
-            <HBox prefHeight="25.0" prefWidth="200.0">
-              <children>
-                <TextField fx:id="searchTextField" maxWidth="1.7976931348623157E308" onAction="#loadNotes" prefWidth="200.0" promptText="Search notes..." HBox.hgrow="ALWAYS" />
-              </children>
-            </HBox>
-          </children>
-        </VBox>
-        <WebView fx:id="noteContentView" prefHeight="200.0" prefWidth="200.0" />
-      </items>
-    </SplitPane>
+    <HBox prefHeight="100.0" prefWidth="200.0">
+      <children>
+        <TableView fx:id="noteListView" maxHeight="1.7976931348623157E308" maxWidth="450.0" prefHeight="500.0" prefWidth="450.0" tableMenuButtonVisible="false">
+          <columns>
+            <TableColumn editable="false" maxWidth="450.0" minWidth="0.0" prefWidth="448.0" text="title" fx:id="titleColumn" />
+          </columns>
+        </TableView>
+        <WebView fx:id="noteContentView" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+      </children>
+    </HBox>
   </center>
   <top>
     <MenuBar>
@@ -47,6 +47,11 @@
         <Menu mnemonicParsing="false" text="File">
           <items>
             <MenuItem mnemonicParsing="false" onAction="#exitApplication" text="Close" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="View">
+          <items>
+            <CheckMenuItem mnemonicParsing="false" onAction="#showLeftPanelClick" selected="true" text="show left panel" fx:id="showLeftPanelCheck" />
           </items>
         </Menu>
       </menus>
