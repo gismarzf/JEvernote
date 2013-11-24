@@ -23,10 +23,10 @@ import com.evernote.edam.type.Note;
 public class NoteListController implements Hookable {
 
 	private final EvernoteAPI evernote = new EvernoteAPI();
-	private ObservableList<Note> noteList;
-
 	@FXML
 	private WebView noteContentView;
+
+	private ObservableList<Note> noteList;
 	@FXML
 	private TableView<Note> noteListView;
 	@FXML
@@ -36,11 +36,11 @@ public class NoteListController implements Hookable {
 	@FXML
 	private Button setFilterButton;
 	@FXML
+	private CheckMenuItem showLeftPanelCheck;
+	@FXML
 	private Label statusMsg;
 	@FXML
 	private TableColumn<Note, String> titleColumn;
-	@FXML
-	private CheckMenuItem showLeftPanelCheck;
 
 	@FXML
 	public void exitApplication() {
@@ -59,6 +59,17 @@ public class NoteListController implements Hookable {
 		titleColumn
 			.setCellValueFactory(new PropertyValueFactory<Note, String>(
 				"title"));
+	}
+
+	@FXML
+	public void showLeftPanelClick() {
+		if (showLeftPanelCheck.isSelected()) {
+			noteListView.setVisible(true);
+			noteListView.setManaged(true);
+		} else {
+			noteListView.setVisible(false);
+			noteListView.setManaged(false);
+		}
 	}
 
 	@FXML
@@ -139,17 +150,6 @@ public class NoteListController implements Hookable {
 		// start thread
 		tr.start();
 
-	}
-
-	@FXML
-	public void showLeftPanelClick() {
-		if (showLeftPanelCheck.isSelected()) {
-			noteListView.setVisible(true);
-			noteListView.setManaged(true);
-		} else {
-			noteListView.setVisible(false);
-			noteListView.setManaged(false);
-		}
 	}
 
 }
