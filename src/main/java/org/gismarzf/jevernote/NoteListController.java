@@ -7,6 +7,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
+import javafx.concurrent.Worker.State;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
@@ -23,10 +26,10 @@ import com.evernote.edam.type.Note;
 public class NoteListController implements Hookable {
 
 	private final EvernoteAPI evernote = new EvernoteAPI();
+	private ObservableList<Note> noteList;
+
 	@FXML
 	private WebView noteContentView;
-
-	private ObservableList<Note> noteList;
 	@FXML
 	private TableView<Note> noteListView;
 	@FXML
@@ -36,40 +39,25 @@ public class NoteListController implements Hookable {
 	@FXML
 	private Button setFilterButton;
 	@FXML
-	private CheckMenuItem showLeftPanelCheck;
-	@FXML
 	private Label statusMsg;
 	@FXML
 	private TableColumn<Note, String> titleColumn;
+	@FXML
+	private CheckMenuItem showLeftPanelCheck;
 
 	@FXML
 	public void exitApplication() {
 		Platform.exit();
 	}
 
-	@Override
-	public void setHook(Object o) {
-
-	}
-
 	public void setNoteList(List<Note> notes) {
 		noteList = FXCollections.observableArrayList(notes);
 		noteListView.setItems(noteList);
+
 		// make the tableview respond to changes in the note object
 		titleColumn
 			.setCellValueFactory(new PropertyValueFactory<Note, String>(
 				"title"));
-	}
-
-	@FXML
-	public void showLeftPanelClick() {
-		if (showLeftPanelCheck.isSelected()) {
-			noteListView.setVisible(true);
-			noteListView.setManaged(true);
-		} else {
-			noteListView.setVisible(false);
-			noteListView.setManaged(false);
-		}
 	}
 
 	@FXML
@@ -80,10 +68,7 @@ public class NoteListController implements Hookable {
 			.setCellValueFactory(new PropertyValueFactory<Note, String>(
 				"title"));
 
-		progressIndicator.setVisible(false);
-		statusMsg.setText("Done.");
-
-		// Listen for selection changes, show note title in text area
+		// on selection change, show note-html-file in webview
 		noteListView.getSelectionModel().selectedItemProperty()
 			.addListener(new ChangeListener<Note>() {
 
@@ -102,14 +87,13 @@ public class NoteListController implements Hookable {
 				}
 			});
 
+		// initial load notes
+		loadNotes();
+
 	}
 
 	@FXML
 	private void loadNotes() {
-
-		progressIndicator.setVisible(true);
-		progressIndicator.setProgress(-1);
-		statusMsg.setText("Loading notes...");
 
 		try {
 			// login, etc.
@@ -118,37 +102,69 @@ public class NoteListController implements Hookable {
 			e.printStackTrace();
 		}
 
-		// get notes in the background
-		// use special platform thingy to remove progressbar (since this
-		// otherwise couldn't be called by non-javafx app thread)
-		Thread tr = new Thread(new Runnable() {
+		final Task<List<Note>> task = new Task<List<Note>>() {
 			@Override
-			public void run() {
-				try {
+			protected List<Note> call() throws Exception {
 
-					evernote.downloadNotes(searchTextField.getText(), 10);
-					evernote.saveNotesToDisk();
+				updateMessage("getting note information...");
+				evernote.downloadNotes(searchTextField.getText(), 3);
 
-					setNoteList(evernote.getNotes());
+				updateProgress(0, 1);
+				for (Note note : evernote.getNotes()) {
 
-				} catch (Exception e) {
-					e.printStackTrace();
+					int thisNote = evernote.getNotes().indexOf(note) + 1;
+					int totalNotes = evernote.getNotes().size();
+
+					updateProgress(thisNote, totalNotes);
+					updateMessage("fetching notes: " + thisNote + " of "
+						+ totalNotes);
+
+					evernote.saveNotesToDisk(note);
 				}
 
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						progressIndicator.setProgress(0);
-						progressIndicator.setVisible(false);
-						statusMsg.setText("Done.");
-					}
-				});
-
+				return evernote.getNotes();
 			}
-		});
+		};
 
-		// start thread
-		tr.start();
+		// status message = task update message
+		statusMsg.textProperty().bind(task.messageProperty());
+
+		// progress = task progress
+		progressIndicator.progressProperty().bind(
+			task.progressProperty());
+
+		// stateProperty for Task:
+		task.stateProperty().addListener(
+			new ChangeListener<Worker.State>() {
+
+				@Override
+				public void changed(
+					ObservableValue<? extends State> observable,
+					State oldValue, Worker.State newState) {
+					if (newState == Worker.State.SUCCEEDED) {
+						setNoteList(task.getValue());
+					}
+				}
+			});
+
+		new Thread(task).start();
+
+	}
+
+	@FXML
+	public void showLeftPanelClick() {
+		if (showLeftPanelCheck.isSelected()) {
+			noteListView.setVisible(true);
+			noteListView.setManaged(true);
+		} else {
+			noteListView.setVisible(false);
+			noteListView.setManaged(false);
+		}
+	}
+
+	@Override
+	public void setHook(Object o) {
+		// TODO Auto-generated method stub
 
 	}
 

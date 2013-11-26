@@ -21,8 +21,7 @@ public class StageWrapper {
 		try {
 			this.pane = (Pane) loader.load();
 		} catch (IOException e) {
-			System.out.println("Couldn't load/initialize: "
-				+ fxmlURI);
+			System.out.println("Couldn't load/initialize: " + fxmlURI);
 			e.printStackTrace();
 		}
 

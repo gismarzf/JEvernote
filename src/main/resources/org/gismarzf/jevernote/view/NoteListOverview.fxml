@@ -9,9 +9,9 @@
 <BorderPane prefHeight="768.0" prefWidth="1024.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="org.gismarzf.jevernote.NoteListController">
   <!-- TODO Add Nodes -->
   <bottom>
-    <HBox alignment="CENTER_RIGHT" fillHeight="true" maxHeight="15.0" prefHeight="30.0" prefWidth="1021.0" BorderPane.alignment="CENTER">
+    <HBox alignment="CENTER_RIGHT" fillHeight="true" maxHeight="94.0" prefHeight="35.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
       <children>
-        <HBox prefHeight="25.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+        <HBox prefHeight="63.0" prefWidth="850.0" HBox.hgrow="ALWAYS">
           <children>
             <TextField fx:id="searchTextField" maxWidth="450.0" onAction="#loadNotes" prefWidth="200.0" promptText="Search notes..." HBox.hgrow="ALWAYS">
               <HBox.margin>
@@ -20,12 +20,20 @@
             </TextField>
           </children>
         </HBox>
-        <Label fx:id="statusMsg" maxHeight="15.0" text="Status message....">
-          <HBox.margin>
-            <Insets right="10.0" />
-          </HBox.margin>
-        </Label>
-        <ProgressIndicator fx:id="progressIndicator" maxHeight="15.0" prefHeight="25.0" progress="-0.28" />
+        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+          <children>
+            <Label fx:id="statusMsg" maxHeight="16.0" maxWidth="-1.0" prefWidth="-1.0" text="" textAlignment="RIGHT" HBox.hgrow="ALWAYS">
+              <HBox.margin>
+                <Insets />
+              </HBox.margin>
+            </Label>
+            <ProgressIndicator fx:id="progressIndicator" maxHeight="100.0" prefHeight="100.0" prefWidth="50.0" progress="1.0" visible="true">
+              <HBox.margin>
+                <Insets bottom="5.0" left="5.0" />
+              </HBox.margin>
+            </ProgressIndicator>
+          </children>
+        </HBox>
       </children>
     </HBox>
   </bottom>

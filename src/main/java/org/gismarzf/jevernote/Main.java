@@ -14,11 +14,10 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) {
 
-		// start with the login screen
-		StageWrapper loginStage =
-			new StageWrapper("view/Login.fxml", "Login to Evernote");
-		this.stage = loginStage.getStage();
-		this.stage.show();
+		StageWrapper noteListOverviewStage =
+			new StageWrapper("view/NoteListOverview.fxml", "JEvernote");
+		stage = noteListOverviewStage.getStage();
+		stage.show();
 
 	}
 }

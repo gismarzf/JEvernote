@@ -3,6 +3,8 @@ package org.gismarzf.jevernote;
 import java.net.URL;
 import java.util.List;
 
+import javafx.concurrent.Task;
+
 import com.evernote.auth.EvernoteAuth;
 import com.evernote.auth.EvernoteService;
 import com.evernote.clients.ClientFactory;
@@ -16,15 +18,30 @@ import com.google.common.collect.Lists;
 
 public class EvernoteAPI {
 
-	private final ENML4jAPI enml = new ENML4jAPI();
-	private List<Note> notes;
 	private NoteStoreClient noteStore;
-
 	private UserStoreClient userStore;
+	private List<Note> notes;
+	private Task<Integer> worker;
+	private int progress, maxProgress;
+
+	private final ENML4jAPI enml = new ENML4jAPI();
 
 	private static final String AUTH_TOKEN =
 		"S=s1:U=8b9d6:E=149a4d264f3:C=1424d2138f4:P=1cd:"
 			+ "A=en-devtoken:V=2:H=b91f9552fe434cef234885ebe369586b";
+
+	public void saveNotesToDisk(Note note) throws Exception {
+		enml.saveNotesToDisk(note);
+	}
+
+	public void createParentFolder() {
+		enml.createParentFolder();
+	}
+
+	public URL getNoteHTMLContentPath(Note note) {
+		assert enml != null;
+		return enml.getPathToNotesIndexHTML().get(note.getGuid());
+	}
 
 	/**
 	 * Retrieve a list of the user's notes.
@@ -51,24 +68,6 @@ public class EvernoteAPI {
 
 		this.notes = noteList;
 
-	}
-
-	public URL getNoteHTMLContentPath(Note note) {
-		assert enml != null;
-		return enml.getPathToNotesIndexHTML().get(note.getGuid());
-	}
-
-	public List<Note> getNotes() {
-		return notes;
-	}
-
-	public NoteStoreClient getNoteStore() {
-		return noteStore;
-	}
-
-	public void saveNotesToDisk() throws Exception {
-		enml.setNoteStore(noteStore);
-		enml.saveNotesToDisk(notes);
 	}
 
 	/**
@@ -100,6 +99,22 @@ public class EvernoteAPI {
 
 		// Set up the NoteStore client
 		noteStore = factory.createNoteStoreClient();
+
+		// give notestore to enml
+		enml.setNoteStore(noteStore);
+
+	}
+
+	public NoteStoreClient getNoteStore() {
+		return noteStore;
+	}
+
+	public List<Note> getNotes() {
+		return notes;
+	}
+
+	public Task<Integer> getWorker() {
+		return worker;
 	}
 
 }
