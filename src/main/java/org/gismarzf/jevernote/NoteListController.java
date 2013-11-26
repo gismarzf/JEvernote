@@ -26,10 +26,9 @@ import com.evernote.edam.type.Note;
 public class NoteListController implements Hookable {
 
 	private final EvernoteAPI evernote = new EvernoteAPI();
-	private ObservableList<Note> noteList;
-
 	@FXML
 	private WebView noteContentView;
+	private ObservableList<Note> noteList;
 	@FXML
 	private TableView<Note> noteListView;
 	@FXML
@@ -39,31 +38,42 @@ public class NoteListController implements Hookable {
 	@FXML
 	private Button setFilterButton;
 	@FXML
+	private CheckMenuItem showLeftPanelCheck;
+	@FXML
 	private Label statusMsg;
 	@FXML
 	private TableColumn<Note, String> titleColumn;
-	@FXML
-	private CheckMenuItem showLeftPanelCheck;
 
 	@FXML
 	public void exitApplication() {
 		Platform.exit();
 	}
 
+	@Override
+	public void setHook(Object o) {
+		// TODO hook isn't implemented here
+
+	}
+
 	public void setNoteList(List<Note> notes) {
 		noteList = FXCollections.observableArrayList(notes);
 		noteListView.setItems(noteList);
+	}
 
-		// make the tableview respond to changes in the note object
-		titleColumn
-			.setCellValueFactory(new PropertyValueFactory<Note, String>(
-				"title"));
+	@FXML
+	public void showLeftPanelClick() {
+		if (showLeftPanelCheck.isSelected()) {
+			noteListView.setVisible(true);
+		} else {
+			noteListView.setVisible(false);
+		}
 	}
 
 	@FXML
 	private void initialize() {
 
-		// make the tableview respond to changes in the note object
+		// make the table view respond to changes in the note list
+		// the property factory looks for a get"Title" method in the Note object
 		titleColumn
 			.setCellValueFactory(new PropertyValueFactory<Note, String>(
 				"title"));
@@ -77,8 +87,6 @@ public class NoteListController implements Hookable {
 					ObservableValue<? extends Note> observable,
 					Note oldValue, Note newValue) {
 
-					// this calls with newValue=null when i make a new search
-					// maybe b/c the selection points to a new non-existing row??
 					if (newValue != null) {
 						noteContentView.getEngine().load(
 							evernote.getNoteHTMLContentPath(newValue)
@@ -87,7 +95,12 @@ public class NoteListController implements Hookable {
 				}
 			});
 
-		// initial load notes
+		// if the node is set to invisible, it won't require space in the gui
+		// neither
+		noteListView.visibleProperty().bindBidirectional(
+			noteListView.managedProperty());
+
+		// load notes on start
 		loadNotes();
 
 	}
@@ -95,12 +108,7 @@ public class NoteListController implements Hookable {
 	@FXML
 	private void loadNotes() {
 
-		try {
-			// login, etc.
-			evernote.setUp();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		evernote.setUp();
 
 		final Task<List<Note>> task = new Task<List<Note>>() {
 			@Override
@@ -119,9 +127,10 @@ public class NoteListController implements Hookable {
 					updateMessage("fetching notes: " + thisNote + " of "
 						+ totalNotes);
 
-					evernote.saveNotesToDisk(note);
+					evernote.saveNoteToDisk(note);
 				}
 
+				updateMessage("");
 				return evernote.getNotes();
 			}
 		};
@@ -133,7 +142,9 @@ public class NoteListController implements Hookable {
 		progressIndicator.progressProperty().bind(
 			task.progressProperty());
 
-		// stateProperty for Task:
+		// this adds a listener that fires when the task has finished
+		// in this case the result of the task (list of notes) is given to the
+		// tableview
 		task.stateProperty().addListener(
 			new ChangeListener<Worker.State>() {
 
@@ -148,23 +159,6 @@ public class NoteListController implements Hookable {
 			});
 
 		new Thread(task).start();
-
-	}
-
-	@FXML
-	public void showLeftPanelClick() {
-		if (showLeftPanelCheck.isSelected()) {
-			noteListView.setVisible(true);
-			noteListView.setManaged(true);
-		} else {
-			noteListView.setVisible(false);
-			noteListView.setManaged(false);
-		}
-	}
-
-	@Override
-	public void setHook(Object o) {
-		// TODO Auto-generated method stub
 
 	}
 
